@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import Main from "@/components/layout/main";
 import TableComponent from "@/components/table";
 import useApi from "@/pages/api/libs/useApi";
-import { getMessage } from "@/pages/api/endpoint/messages";
+import { getAllPhoto } from "@/pages/api/endpoint/photos";
 
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
-import { useRouter } from "next/router";
-
 
 const columns = [
   {
@@ -16,8 +15,18 @@ const columns = [
     align: "left"
   },
   {
-    label: "Message",
-    value: "message",
+    label: "Email",
+    value: "email",
+    align: "left"
+  },
+  {
+    label: "Status",
+    value: "statusTransaction",
+    align: "left"
+  },
+  {
+    label: "photo",
+    value: "photo.photoUrl",
     align: "left"
   },
   {
@@ -34,16 +43,22 @@ export default function PhotoIndex() {
   const [totalRow, setTotalRow] = useState(15);
   const router = useRouter();
 
-  const messageAPI = useApi(getMessage);
+  const photoAPI = useApi(getAllPhoto);
 
   const loadData = () => {
-    messageAPI.request({ isActive: 1, perPage: rowsPerPage, page: 1 })
+    photoAPI.request({ isSelected: 0, perPage: rowsPerPage, page: 1 })
   }
 
   const renderTable = (type, value, data, key) => {
+    // console.log("data: ", data)
     switch (type) {
       case "no":
         value = key + 1
+        break;
+      case "photo.photoUrl":
+        if(data.photo !== null) {
+          value = data.photo.photoUrl
+        }
         break;
       case "action":
         value = (
@@ -62,12 +77,12 @@ export default function PhotoIndex() {
   }
 
   const handleChangePage = (event, newPage) => {
-    messageAPI.request({ isActive: 1, perPage: rowsPerPage, page: newPage + 1 })
+    photoAPI.request({ isSelected: 0, perPage: rowsPerPage, page: newPage + 1 })
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    messageAPI.request({ isActive: 1, perPage: +event.target.value, page: 1 })
+    photoAPI.request({ isSelected: 0, perPage: +event.target.value, page: 1 })
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -75,17 +90,17 @@ export default function PhotoIndex() {
   useEffect(() => {
     loadData();
     return () => {
-      messageAPI.reset();
+      photoAPI.reset();
     }
   }, [])
 
   useEffect(() => {
-    if (messageAPI.status) {
-      setData(messageAPI.data)
-      setTotalRow(messageAPI.meta.total)
+    if (photoAPI.status) {
+      setData(photoAPI.data)
+      setTotalRow(photoAPI.meta.total)
     }
-  }, [messageAPI.status, messageAPI.data])
-
+  }, [photoAPI.status, photoAPI.data])
+  // console.log("data: ", data)
   return (
     <Main>
       <Container maxWidth={"xl"}>

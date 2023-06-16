@@ -31,13 +31,13 @@ export const transformRequestOptions = (params) => {
 
 axiosRequest.interceptors.request.use(
   (config) => {
-    const token = "huhuyy";
-    // const token = localStorage.getItem("_auth_token");
+    const token = localStorage.getItem("_access_token");
+    
     config.params = {
       ...config.params,
     };
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${JSON.parse(token)}`;
     } else {
       delete axiosRequest.defaults.headers.common['Authorization'];
     }

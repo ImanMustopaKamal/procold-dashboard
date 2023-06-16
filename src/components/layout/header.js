@@ -14,19 +14,22 @@ import {
 } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 const drawerWidth = 240;
 
 export default function Header({ handleDrawerToggle }) {
   const [anchorElUser, setAnchorElUser] = useState(null);
 
+  const [value, removeValue] = useLocalStorage("_access_token", "");
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = (e) => {
-    console.log(e.target.dataset.tag)
     if (e?.target?.dataset?.tag?.toLowerCase() === 'logout') {
+      removeValue(value)
       signOut();
     }
     setAnchorElUser(null);

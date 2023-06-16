@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
+import useLocalStorage from '@/hooks/useLocalStorage';
+
 import {
   Toolbar,
   Drawer,
@@ -18,6 +20,8 @@ import Footer from './footer';
 const drawerWidth = 240;
 
 function Main(props) {
+  const [value, setValue] = useLocalStorage("_access_token", "");
+
   const { window, children } = props;
   const { data: session, status } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -33,6 +37,10 @@ function Main(props) {
     if (status !== 'loading') {
       if (!session?.accessToken) {
         router.push('/auth/login')
+      }else{
+        if(!value) {
+          setValue(session.accessToken);
+        }
       }
     }
   }, [session, status])
