@@ -29,7 +29,7 @@ export default function Header({ handleDrawerToggle }) {
 
   const handleCloseUserMenu = (e) => {
     if (e?.target?.dataset?.tag?.toLowerCase() === 'logout') {
-      removeValue(value)
+      removeValue("_access_token");
       signOut();
     }
     setAnchorElUser(null);

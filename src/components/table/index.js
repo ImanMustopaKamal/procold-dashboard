@@ -50,7 +50,7 @@ export default function TableComponent({ data, columns, renderTable, page, rowsP
                     const value = row[item.value];
                     const key = row;
                     return (
-                      <StyledTableCell key={idx} component="th" scope="row">
+                      <StyledTableCell align={item.align} key={idx} component="th" scope="row">
                         {renderTable(item.value, value, key, index)}
                       </StyledTableCell>
                     )

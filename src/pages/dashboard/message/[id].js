@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import Main from "@/components/layout/main";
-import { createdMessage } from "@/pages/api/endpoint/messages";
+import { getMessageByID, updatedMessage } from "@/pages/api/endpoint/messages";
 import useApi from "@/pages/api/libs/useApi";
 
 import {
@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 
 export default function MessageEdit() {
-  const created = useApi(createdMessage);
+  const messageAPI = useApi(getMessageByID);
+  const updated = useApi(updatedMessage);
   const router = useRouter();
 
   const [id, setId] = useState(null);
@@ -36,30 +37,49 @@ export default function MessageEdit() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    created.request({ message, layout: [] });
+    updated.request(id, { message, layout: [] });
   };
 
   useEffect(() => {
-    if (!created.error) {
-      if (created.status) {
-        if (created.meta.statusCode === 201) {
-          alert("succes created message");
-          created.reset();
+    if (router.query.id) {
+      setId(router.query.id);
+    }
+  }, [router.query.id]);
+
+  useEffect(() => {
+    if (id) {
+      messageAPI.request(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (messageAPI.status) {
+      setData(messageAPI.data);
+      setMessage(messageAPI.data.message);
+    }
+  }, [messageAPI.status, messageAPI.data]);
+
+  useEffect(() => {
+    if (!updated.error) {
+      if (updated.status) {
+        if (updated.meta.statusCode === 200) {
+          alert("succes updated message");
+          updated.reset();
           router.replace("/dashboard/message");
         }
       }
     } else {
-      alert(created.error.response.data.meta.message[0]);
-      created.reset();
+      alert(updated.error.response.data.meta.message[0]);
+      updated.reset();
     }
-  }, [created.status, created.meta, created.error]);
+  }, [updated.status, updated.meta, updated.error]);
 
   return (
     <Main>
       <Container maxWidth={"xl"}>
         <Grid container alignItems={"center"} sx={{ mb: 4 }}>
           <Grid item xs={6} md={6} lg={6}>
-            <Typography variant="h5">Create Data Message</Typography>
+            <Typography variant="h5">Edit Data Message</Typography>
           </Grid>
         </Grid>
         <Grid container alignItems={"center"} sx={{ mb: 4 }}>

@@ -20,7 +20,7 @@ import Footer from './footer';
 const drawerWidth = 240;
 
 function Main(props) {
-  const [value, setValue] = useLocalStorage("_access_token", "");
+  const [value, setValue, removeValue] = useLocalStorage("_access_token", "");
 
   const { window, children } = props;
   const { data: session, status } = useSession();
@@ -37,12 +37,15 @@ function Main(props) {
     if (status !== 'loading') {
       if (!session?.accessToken) {
         router.push('/auth/login')
-      }else{
-        if(!value) {
-          setValue(session.accessToken);
-        }
+      }
+      if(status === 'authenticated') {
+        setValue(session.accessToken);
+      }
+      if(status === 'unauthenticated') {
+        removeValue("_access_token");
       }
     }
+    console.log("status: ", status)
   }, [session, status])
 
   return (
