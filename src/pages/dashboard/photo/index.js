@@ -74,7 +74,7 @@ export default function PhotoIndex() {
   const selectedAPI = useApi(selectedPhoto);
 
   const loadData = () => {
-    photoAPI.request({ isSelected: 0, perPage: rowsPerPage, page: 1 });
+    photoAPI.request({ perPage: rowsPerPage, page: 1 });
   };
 
   const handleShow = (value, width, height, e) => {
@@ -210,7 +210,6 @@ export default function PhotoIndex() {
 
   const handleChangePage = (event, newPage) => {
     photoAPI.request({
-      isSelected: 0,
       perPage: rowsPerPage,
       page: newPage + 1,
     });
@@ -218,7 +217,7 @@ export default function PhotoIndex() {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    photoAPI.request({ isSelected: 0, perPage: +event.target.value, page: 1 });
+    photoAPI.request({ perPage: +event.target.value, page: 1 });
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -250,7 +249,6 @@ export default function PhotoIndex() {
           alert("succes updated photo");
           selectedAPI.reset();
           photoAPI.request({
-            isSelected: 0,
             perPage: rowsPerPage,
             page: page + 1,
           });
