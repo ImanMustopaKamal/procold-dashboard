@@ -11,7 +11,7 @@ const nextConfig = {
   // },
   reactStrictMode: true,
   images: {
-    domains: ["api-procold.immortal-universe.com"],
+    domains: ["api-procold.immortal-universe.com", "assets8.lottiefiles.com"],
   },
 }
 

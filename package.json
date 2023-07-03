@@ -16,6 +16,7 @@
     "@mui/material": "^5.13.4",
     "axios": "^1.4.0",
     "gsap": "^3.12.1",
+    "lottie-web": "^5.12.2",
     "next": "13.4.4",
     "next-auth": "^4.22.1",
     "pusher-js": "^8.1.0",
