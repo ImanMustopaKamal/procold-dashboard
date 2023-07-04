@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
-import useLocalStorage from '@/hooks/useLocalStorage';
+import useLocalStorage from "@/hooks/useLocalStorage";
 
-import {
-  Toolbar,
-  Drawer,
-  Box,
-  CssBaseline,
-  Typography,
-} from '@mui/material';
+import { Toolbar, Drawer, Box, CssBaseline, Typography } from "@mui/material";
 
-import SideBar from './sidebar';
-import Header from './header';
-import Footer from './footer';
+import SideBar from "./sidebar";
+import Header from "./header";
+import Footer from "./footer";
+import Head from "next/head";
 
 const drawerWidth = 240;
 
@@ -31,29 +26,37 @@ function Main(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   useEffect(() => {
-    if (status !== 'loading') {
+    if (status !== "loading") {
       if (!session?.accessToken) {
-        router.push('/auth/login')
+        router.push("/auth/login");
       }
-      if(status === 'authenticated') {
+      if (status === "authenticated") {
         setValue(session.accessToken);
       }
-      if(status === 'unauthenticated') {
+      if (status === "unauthenticated") {
         removeValue("_access_token");
       }
     }
-    console.log("status: ", status)
-  }, [session, status])
+    console.log("status: ", status);
+  }, [session, status]);
 
   return (
     <>
-      {status === 'loading' ?
+      <Head>
+        <title>Procold</title>
+        <meta name="description" content="Procold" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      {status === "loading" ? (
         <>Loading</>
-        : status === 'authenticated' ? <>
-          <Box sx={{ display: 'flex', height: "100vh" }}>
+      ) : status === "authenticated" ? (
+        <>
+          <Box sx={{ display: "flex", height: "100vh" }}>
             <CssBaseline />
             <Header handleDrawerToggle={handleDrawerToggle} />
             <Box
@@ -71,8 +74,11 @@ function Main(props) {
                   keepMounted: true, // Better open performance on mobile.
                 }}
                 sx={{
-                  display: { xs: 'block', sm: 'none' },
-                  '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                  display: { xs: "block", sm: "none" },
+                  "& .MuiDrawer-paper": {
+                    boxSizing: "border-box",
+                    width: drawerWidth,
+                  },
                 }}
               >
                 <SideBar />
@@ -80,8 +86,11 @@ function Main(props) {
               <Drawer
                 variant="permanent"
                 sx={{
-                  display: { xs: 'none', sm: 'block' },
-                  '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                  display: { xs: "none", sm: "block" },
+                  "& .MuiDrawer-paper": {
+                    boxSizing: "border-box",
+                    width: drawerWidth,
+                  },
                 }}
                 open
               >
@@ -90,7 +99,11 @@ function Main(props) {
             </Box>
             <Box
               component="main"
-              sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+              sx={{
+                flexGrow: 1,
+                p: 3,
+                width: { sm: `calc(100% - ${drawerWidth}px)` },
+              }}
             >
               <Toolbar />
               <main>{children}</main>
@@ -98,9 +111,8 @@ function Main(props) {
             </Box>
           </Box>
         </>
-          : null}
+      ) : null}
     </>
-
   );
 }
 
